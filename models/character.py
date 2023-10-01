@@ -20,7 +20,7 @@ class Character(ABC):
 class Warrior(Character):
     def __init__(self, player_number, user_name):
         super().__init__(player_number, user_name)
-        self.pv = 300
+        self.pv = 350
         self.valid_actions = ["regular attack", "safe attack"]
 
     def safe_attack(self, other):
@@ -53,7 +53,7 @@ class Barbarian(Character):
     
 
 class Cleric(Character):
-    MAX_PV = 200
+    MAX_PV = 230
 
     def __init__(self, player_number, user_name):
         super().__init__(player_number, user_name)

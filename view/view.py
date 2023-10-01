@@ -1,3 +1,6 @@
+from character import Barbarian, Cleric
+
+
 class View:
     player_number = 0
     game_turn = 0
@@ -5,16 +8,17 @@ class View:
     def display_rules(self):
         print()
         print("*" *119)
-        print("                                        JEU : LE GRAND DUEL   ( 2 joueurs ) ")                                                     
+        print("                                        JEU : LE GRAND DUEL   ( 2 joueurs )")                                                     
         print("*" *119)
 
         print()       
         print("Bienvenue dans l'arène ! Voici les règles du jeu :  ")   
         print()
-        print("Vous avez le choix entre 3 classes de personnages : guerrier, barbare ou clerc.  ")                                                           
+        print("Vous avez le choix entre 3 classes de personnages : guerrier, barbare ou clerc.")                                                           
         print("Le barbare est le personnage le plus résistant.")     
         print("Il peut entrer en furie pour infliger des dégâts supplémentaires à son adversaire mais cela lui coûte des PV.")     
-        print("Le Clerc possède peu de points de vies mais il a la capacité de se soigner.")     
+        print("Le Clerc possède peu de points de vies mais il a la capacité de se soigner.")
+        print(f"Il ne peut pas récupérer plus de points de vie que sa santé maximale ({Cleric.MAX_PV} PV).")     
         print("Quant au guerrier c'est un personnage équilibré.")     
         print("Il a la particularité de pouvoir lancer une attaque peu puissante mais fiable.")     
         print()
@@ -32,6 +36,7 @@ class View:
     def prompt_player_character_class(self, player_user_name):
         valid_characters_classes = ("guerrier", "barbare", "clerc")
         player_class_choice = input(f"{player_user_name}, rentres le nom de la classe de ton personnage (guerrier, clerc ou barbare) : ")
+        print()
         if player_class_choice.lower().strip() in valid_characters_classes:
             return player_class_choice.lower().strip()
         else:
@@ -42,8 +47,11 @@ class View:
         print("*" * 119)
         print(" " * 45, "---", "TOUR", self.game_turn, "---")
 
-    def display_player_pv(self, player):
-        print(player.user_name, ":", player.pv, "PV")
+    def display_players_pv(self, player1, player2):
+        print()
+        print(player1.user_name, ":", player1.pv, "PV")
+        print(player2.user_name, ":", player2.pv, "PV")
+        print()
 
     def prompt_for_player_action(self, valid_actions, player):
         print()
@@ -56,14 +64,12 @@ class View:
         player_choice = ""
         while not player_choice.lower().strip() in valid_actions:
             player_choice = input(player.user_name + ", rentres l'attaque que tu souhaites envoyer : ")
-        
         return player_choice.lower().strip()
     
     def display_message_regular_attack(self, damages, player, other):
         print()
         if damages:
-                print(f"{player.user_name} ton attaque a réussi ! Tu as infligé {damages} points de dégâts à {other.user_name}!")
-                
+                print(f"{player.user_name} ton attaque a réussi ! Tu as infligé {damages} points de dégâts à {other.user_name}!")          
         else:
                 print(f"{player.user_name} ton attaque a échoué !")
 
@@ -87,7 +93,7 @@ class View:
             print(f"En tout, tu as infligé {damages} points de dêgats à ton adversaire.")
 
     def display_entering_in_furie_mode(self, player):
-        print(f"{player.user_name} tu rentres en mode furie ! Tu t'infliges 70 points de dégâts et tu débloques l'attaque furie !")
+        print(f"{player.user_name} tu rentres en mode furie ! Tu t'infliges {Barbarian.FURY_AUTO_DAMAGES} points de dégâts et tu débloques l'attaque furie !")
 
     def display_death_of_furie(self):
         print("Malheuresement, la blessure que tu t'es infligé a eu raison de toi... ")
@@ -97,29 +103,4 @@ class View:
 
 
 
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if __name__ == '__main__':
-    view = View()
-    user_name = view.prompt_player_user_name()
-    player_class = view.prompt_player_character_class(user_name)
-
-    print(player_class)
-
+    

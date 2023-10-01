@@ -20,30 +20,21 @@ class Controller:
         user_name_player1 = self.view.prompt_player_user_name()
         class_choice_player1 = self.view.prompt_player_character_class(user_name_player1)
         player1 = self.create_character_with_class_choice(class_choice_player1, 1, user_name_player1)
-        print()
         self.player1 = player1
 
         user_name_player2 = self.view.prompt_player_user_name()
         class_choice_player2 = self.view.prompt_player_character_class(user_name_player2)
         player2 = self.create_character_with_class_choice(class_choice_player2, 2, user_name_player2)
-        print()
         self.player2 = player2
-    
-    def display_players_pv(self):
-        print()
-        self.view.display_player_pv(self.player1)
-        self.view.display_player_pv(self.player2)
-        print()
 
     def setup_turn(self):
         self.view.display_start_of_turn()
-        self.display_players_pv()
+        self.view.display_players_pv(self.player1, self.player2)
 
     def launch_warrior_actions(self, player, other, attack_name):
         if attack_name == "regular attack":
             damages = player.regular_attack(other)
             self.view.display_message_regular_attack(damages, player, other)
-      
         if attack_name == "safe attack":
             damages = player.safe_attack(other) 
             self.view.display_message_regular_attack(damages, player, other)
@@ -52,7 +43,6 @@ class Controller:
         if attack_name == "regular attack":
             damages = player.regular_attack(other)
             self.view.display_message_regular_attack(damages, player, other)
-
         if attack_name ==  "heal":
             pv_restoration = player.healing()
             self.view.display_heal_attack(player, pv_restoration)
@@ -66,7 +56,6 @@ class Controller:
             self.view.display_entering_in_furie_mode(player)
             if player.pv < 0:
                 self.view.display_death_of_furie()
-
         if attack_name == "fury attack":
             all_damages = player.attack_with_fury(other)
             self.view.display_furie_attack(all_damages, player, other)
@@ -90,7 +79,7 @@ class Controller:
         if self.one_player_loose():
             return False
      
-        self.display_players_pv()
+        self.view.display_players_pv(self.player1, self.player2)
    
         player_choice = self.view.prompt_for_player_action(self.player2.valid_actions, self.player2)
         self.launch_attack(self.player2, self.player1, player_choice)
@@ -111,7 +100,7 @@ class Controller:
             self.setup_turn()
             if not self.play_entire_turn():
                 break
-        self.display_players_pv()
+        self.view.display_players_pv(self.player1, self.player2)
         winner = self.determining_winner()
         self.view.show_winner(winner)
       

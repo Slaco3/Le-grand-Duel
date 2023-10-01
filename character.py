@@ -30,6 +30,7 @@ class Warrior(Character):
 
 
 class Barbarian(Character):
+    FURY_AUTO_DAMAGES = 70
     def __init__(self, player_number, user_name):
         super().__init__(player_number, user_name)
         self.pv = 500
@@ -38,7 +39,7 @@ class Barbarian(Character):
 
     def entering_in_fury(self):
         self.fury_mode = True
-        self.pv -= 70
+        self.pv -= Barbarian.FURY_AUTO_DAMAGES
         self.valid_actions.remove("fury mode")
         self.valid_actions.append("fury attack")
 
@@ -52,18 +53,20 @@ class Barbarian(Character):
     
 
 class Cleric(Character):
+    MAX_PV = 200
+
     def __init__(self, player_number, user_name):
         super().__init__(player_number, user_name)
-        self.pv = 200
+        self.pv = Cleric.MAX_PV
         self.valid_actions = ["regular attack", "heal"]
 
     def healing(self):
         pv_restoration = random.randint(40, 70)
-        if pv_restoration + self.pv < 200:
+        if pv_restoration + self.pv < Cleric.MAX_PV:
             self.pv += pv_restoration    
         else:
-            pv_restoration = 200 - self.pv
-            self.pv = 200
+            pv_restoration = Cleric.MAX_PV - self.pv
+            self.pv = Cleric.MAX_PV
         return pv_restoration
 
     

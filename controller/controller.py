@@ -1,6 +1,6 @@
 import time
 
-from character import Warrior, Barbarian, Cleric
+from models.character import Warrior, Barbarian, Cleric
 
 
 class Controller:
@@ -26,6 +26,10 @@ class Controller:
         class_choice_player2 = self.view.prompt_player_character_class(user_name_player2)
         player2 = self.create_character_with_class_choice(class_choice_player2, 2, user_name_player2)
         self.player2 = player2
+
+    def show_players_presentations(self):
+        self.view.show_player_presentation(self.player1)
+        self.view.show_player_presentation(self.player2)
 
     def setup_turn(self):
         self.view.display_start_of_turn()
@@ -58,7 +62,7 @@ class Controller:
                 self.view.display_death_of_furie()
         if attack_name == "fury attack":
             all_damages = player.attack_with_fury(other)
-            self.view.display_furie_attack(all_damages, player, other)
+            self.view.display_furie_attack(all_damages, player)
      
     def launch_attack(self, player, other, attack_name):
         if isinstance(player, Warrior):
@@ -67,6 +71,7 @@ class Controller:
             self.launch_cleric_actions(player, other, attack_name)
         if isinstance(player, Barbarian):
             self.launch_barbarian_actions(player, other, attack_name)
+        print()
 
     def one_player_loose(self):
         if self.player1.pv < 0 or self.player2.pv < 0:
@@ -78,9 +83,10 @@ class Controller:
         time.sleep(3)
         if self.one_player_loose():
             return False
-     
+
+        self.view.display_separator_bar()
+
         self.view.display_players_pv(self.player1, self.player2)
-   
         player_choice = self.view.prompt_for_player_action(self.player2.valid_actions, self.player2)
         self.launch_attack(self.player2, self.player1, player_choice)
         time.sleep(3)
@@ -96,6 +102,7 @@ class Controller:
     def run(self):
         self.view.display_rules()
         self.get_players()
+        self.show_players_presentations()
         while True:
             self.setup_turn()
             if not self.play_entire_turn():

@@ -1,4 +1,4 @@
-from character import Barbarian, Cleric
+from models.character import Barbarian, Cleric, Warrior
 
 
 class View:
@@ -41,20 +41,27 @@ class View:
             return player_class_choice.lower().strip()
         else:
             return self.prompt_player_character_class(player_user_name)
-        
+
+    def show_player_presentation(self, player):
+        if isinstance(player, Warrior):
+            print(f"{player.user_name} tu es un fier Guerrier !")
+        if isinstance(player, Cleric):
+            print(f"{player.user_name} tu incarnes la sagesse du Clerc !")
+        if isinstance(player, Barbarian):
+            print(f"{player.user_name} tu es un Féroce Barbare !")
+
     def display_start_of_turn(self):
         self.game_turn += 1
         print("*" * 119)
         print(" " * 45, "---", "TOUR", self.game_turn, "---")
+        print()
 
     def display_players_pv(self, player1, player2):
-        print()
         print(player1.user_name, ":", player1.pv, "PV")
         print(player2.user_name, ":", player2.pv, "PV")
         print()
 
     def prompt_for_player_action(self, valid_actions, player):
-        print()
         print(f"{player.user_name} à toi de jouer !".upper())
         print()
         print("Attaques :")
@@ -74,9 +81,11 @@ class View:
                 print(f"{player.user_name} ton attaque a échoué !")
 
     def display_heal_attack(self, player, pv_restoration):
+         print()
          print(f"{player.user_name} tu as récupéré {pv_restoration} PV, il te reste donc {player.pv} PV au total.")
 
-    def display_furie_attack(self, all_damages, player, other):
+    def display_furie_attack(self, all_damages, player):
+        print()
         damages1 = all_damages[0]
         damages2 = all_damages[1]
         damages = all_damages[2]
@@ -93,10 +102,15 @@ class View:
             print(f"En tout, tu as infligé {damages} points de dêgats à ton adversaire.")
 
     def display_entering_in_furie_mode(self, player):
+        print()
         print(f"{player.user_name} tu rentres en mode furie ! Tu t'infliges {Barbarian.FURY_AUTO_DAMAGES} points de dégâts et tu débloques l'attaque furie !")
 
     def display_death_of_furie(self):
         print("Malheuresement, la blessure que tu t'es infligé a eu raison de toi... ")
+
+    def display_separator_bar(self):
+        print("-"*30)
+        print()
 
     def show_winner(self, winner):
         print(f"FELICIATIONS {winner.user_name} tu remportes la bataille ! " )

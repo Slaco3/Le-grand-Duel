@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 import random
 
 
@@ -21,6 +21,7 @@ class Warrior(Character):
     def __init__(self, player_number, user_name):
         super().__init__(player_number, user_name)
         self.pv = 300
+        self.valid_actions = ["regular attack", "safe attack"]
 
     def safe_attack(self, other):
         damages = random.randint(40,70)
@@ -33,10 +34,13 @@ class Barbarian(Character):
         super().__init__(player_number, user_name)
         self.pv = 500
         self.fury_mode = False
+        self.valid_actions = ["regular attack", "fury mode"]
 
     def entering_in_fury(self):
         self.fury_mode = True
-        self.pv -= 40
+        self.pv -= 70
+        self.valid_actions.remove("fury mode")
+        self.valid_actions.append("fury attack")
 
     def attack_with_fury(self, other):
         if self.fury_mode == False:
@@ -45,49 +49,22 @@ class Barbarian(Character):
         damages2 = self.regular_attack(other)
         all_damages = damages1 + damages2
         return damages1, damages2, all_damages
-
+    
 
 class Cleric(Character):
     def __init__(self, player_number, user_name):
         super().__init__(player_number, user_name)
         self.pv = 200
+        self.valid_actions = ["regular attack", "heal"]
 
     def healing(self):
         pv_restoration = random.randint(40, 70)
-        self.pv += pv_restoration
-        if self.pv > 200:
+        if pv_restoration + self.pv < 200:
+            self.pv += pv_restoration    
+        else:
+            pv_restoration = 200 - self.pv
             self.pv = 200
         return pv_restoration
-
-
-if __name__ == "__main__":
-    warrior = Warrior(1, "Nicolas")
-    barbarian = Barbarian(2, "Claire")
-    cleric = Cleric(3, "Baptiste")
-    
-    # print("pv avant attaque :", barbarian.pv)
-    # damage = warrior.regular_attack(barbarian)
-    # print("damage :", damage)
-    # print("pv après attaque", barbarian.pv)
-    # if damage:
-    #     print(True)
-    # else:
-    #     print(False)
-    
-    # cleric.pv = 50
-    # print("pv avant",cleric.pv)
-    # pv_restoration = cleric.healing()
-    # print("pv après",cleric.pv)
-    # print("pv récupérés", pv_restoration)
-
-    # print("fury avant :", barbarian.fury_mode)
-    # barbarian.entering_in_fury()
-    # print("fury après:", barbarian.fury_mode)
-    # print("warrior pv avant", warrior.pv)
-    # tuple_damages = barbarian.attack_with_fury(warrior)
-    # print("différents damages", tuple_damages)
-    # print("warrior pv après", warrior.pv)
-
 
     
 
